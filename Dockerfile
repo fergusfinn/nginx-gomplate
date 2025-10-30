@@ -10,8 +10,10 @@ RUN apt-get update && apt-get upgrade -y \
 COPY --from=hairyhenderson/gomplate:stable /gomplate /bin/gomplate
 
 # Prepare directories for non-root nginx user (using existing nginx user from base image)
+# Also remove default nginx config that listens on port 80
 RUN mkdir -p /var/log/nginx /var/cache/nginx /var/run \
-  && chown -R nginx:nginx /var/log/nginx /var/cache/nginx /var/run /etc/nginx
+  && chown -R nginx:nginx /var/log/nginx /var/cache/nginx /var/run /etc/nginx \
+  && rm -f /etc/nginx/conf.d/default.conf
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
